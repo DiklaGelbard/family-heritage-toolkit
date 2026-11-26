@@ -1,6 +1,6 @@
 # First website workflow
 
-1. Conduct the discovery interview; complete project.json and record decisions and missing sources.
+1. Conduct the discovery interview; complete project.json and record decisions and missing sources. Summarize known material and explicitly ask about additional sources, even when an archive is already supplied. Record the owner's answer or mark it pending; distinguish permission to inspect from permission to publish. Existing files alone do not establish that discovery is complete. Continue useful work with available material while unanswered source questions remain open.
 2. Import a toolkit JSON dataset or the documented GEDCOM subset. Inspect proposals/import.json and its warnings. This stages a complete snapshot, not a merge.
 3. Compare the proposal with existing accepted data. Resolve identity and relationship questions; never merge by name alone. Accept with the exact proposal hash after review. Running accept without a hash prints the required hash and makes no change.
 4. Prepare a selection JSON with personIds, familyIds and factIds. In v2, select families explicitly to publish relationship links between selected people. Select marriage/divorce event IDs through factIds as well; all known partners must be selected to publish an event. Each selected person fact publishes its type and value. Legacy v1 retains selected-parent links. Review conflicting facts before selecting them. Citation text and original sources are excluded from output. See docs/families.md for migration.

@@ -7,3 +7,5 @@ Run npm test before proposing a release. No install is needed. External writes r
 Use stable IDs and source citations; names alone are not identity keys. Preserve originals. Record uncertain facts separately from conclusions. Do not claim upload, deployment or external edits succeeded without observing the destination.
 
 Discovery skill: skills/discovery-interview/SKILL.md. Resume a workspace with node src/cli/index.mjs status DIR. v0.2 has no external-service writes. For family relationship support and v1 migration, read docs/families.md. Never infer couples from flattened parent lists.
+
+Every new project must include an additional-source discovery round, even if files were supplied in the handoff. Summarize known sources, ask what else is available, and persist the answer or pending question. Follow the discovery skill; do not assume the supplied inventory is exhaustive.
