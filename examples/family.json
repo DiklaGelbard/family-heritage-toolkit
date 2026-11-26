@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "sources": [{"id":"s1","title":"Fictional interview"}],
+  "people": [
+    {"id":"p1","name":"מרים לדוגמה","parents":[],"facts":[{"id":"f1","type":"birth","value":"1932 (fictional)","citation":{"sourceId":"s1","locator":"00:01:20"}}]},
+    {"id":"p2","name":"דנה לדוגמה","parents":["p1"],"facts":[]}
+  ]
+}

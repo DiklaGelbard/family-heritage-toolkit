@@ -1,0 +1,8 @@
+[
+  {"stage":"purpose","questions":["Who is this site about, and why are you creating it?","Who should see the site and details of living relatives?"]},
+  {"stage":"scope","questions":["Which starting people and branches should be included?","Should spouses be included without extending into their ancestry?"]},
+  {"stage":"sources","questions":["Do you have a GEDCOM export, albums, recordings or documents?","Which specific email threads or external family-tree links may we inspect?","What attribution and publication restrictions apply?"]},
+  {"stage":"people","questions":["Which names, relationships or dates need correction?","Which details are uncertain, and who could clarify them?"]},
+  {"stage":"design","questions":["Which language and visual style do you prefer?","Which cover-photo candidates do you recognize and approve?"]},
+  {"stage":"review","questions":["What is essential for the first version?","Please review the brief, source inventory and unresolved questions."]}
+]

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Minimal family dataset v1",
+  "type": "object",
+  "required": ["schemaVersion", "people", "sources"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "sources": {"type": "array", "items": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string", "minLength": 1}, "title": {"type": "string"}}}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "people": {"type": "array", "items": {
+      "type": "object", "required": ["id", "name", "parents", "facts"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+        "name": {"type": "string", "minLength": 1},
+        "parents": {"type": "array", "items": {"type": "string"}},
+        "facts": {"type": "array", "items": {
+          "type": "object", "required": ["id", "type", "value", "citation"],
+          "properties": {
+            "id": {"type": "string"}, "type": {"type": "string"}, "value": {"type": "string"},
+            "citation": {"type": "object", "required": ["sourceId", "locator"], "properties": {"sourceId": {"type": "string"}, "locator": {"type": "string"}}}
+          }
+        }}
+      }
+    }}
+  }
+}

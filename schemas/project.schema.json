@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Family project configuration v1",
+  "type": "object",
+  "required": ["schemaVersion", "title", "language", "audience", "purpose", "scope"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "title": {"type": "string", "minLength": 1},
+    "language": {"enum": ["he", "en"]},
+    "audience": {"enum": ["private", "public"]},
+    "purpose": {"type": "string", "minLength": 1},
+    "scope": {"type": "string", "minLength": 1},
+    "cover": {"type": ["object", "null"]},
+    "sources": {"type": "array", "items": {"type": "object"}}
+  }
+}
