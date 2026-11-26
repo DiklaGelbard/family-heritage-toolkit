@@ -7,9 +7,10 @@ import {parseGedcom} from '../../src/adapters/gedcom.mjs';
 import {validate} from '../../src/genealogy/validate.mjs';
 import {run} from '../../src/cli/index.mjs';
 import {write,read,hash} from '../../src/workspace/store.mjs';
+import {reviewResearch} from '../support/research.mjs';
 const fixture='tests/fixtures/families.ged';
 const dataset=()=>validate(parseGedcom(fs.readFileSync(fixture,'utf8'),'source'));
-function workspace(t){const root=fs.mkdtempSync(path.join(os.tmpdir(),'family-links-'));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));run(['init',root]);write(root,'project.json',JSON.parse(fs.readFileSync('examples/project.json')));run(['import',root,fixture]);run(['accept',root,hash(read(root,'proposals/import.json'))]);return root;}
+function workspace(t){const root=fs.mkdtempSync(path.join(os.tmpdir(),'family-links-'));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));run(['init',root]);write(root,'project.json',JSON.parse(fs.readFileSync('examples/project.json')));run(['import',root,fixture]);run(['accept',root,hash(read(root,'proposals/import.json'))]);reviewResearch(root);return root;}
 test('remarriage keeps each child with the correct family and preserves events',()=>{
   const d=dataset();assert.equal(d.schemaVersion,2);assert.equal(d.families.length,4);
   assert.deepEqual(d.people.find(p=>p.id==='I4').parents,['I1','I2']);

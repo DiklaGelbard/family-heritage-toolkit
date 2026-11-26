@@ -2,7 +2,7 @@
 
 A lightweight agent harness for guided genealogy research and family website creation.
 
-**Early v0.2 prototype:** discovery interview → source import → reviewed snapshot → publication selection → local website preview → resumable handoff.
+**Early v0.3 prototype:** research scope → source discovery and content review → synthesis → research gate → website planning → reviewed snapshot → publication selection → local preview.
 
 ## Quick start
 
@@ -21,6 +21,8 @@ node src/cli/index.mjs init /path/to/private-family-workspace
 node src/cli/index.mjs questions
 # Complete project.json using the interview. See examples/project.json.
 node src/cli/index.mjs import /path/to/private-family-workspace /path/to/family.ged
+# Inspect relevant source contents, record research/coverage.json and a synthesis.
+# See workflows/research-first.md; planning/select/build wait for this gate.
 # Inspect proposals/import.json, including all warnings.
 node src/cli/index.mjs accept /path/to/private-family-workspace
 # The command above prints the proposal hash without accepting it.
@@ -37,6 +39,8 @@ node src/cli/index.mjs assess /path/to/private-family-workspace
 Ask the agent to read AGENTS.md and skills/discovery-interview/SKILL.md, then start a project in a separate workspace. Skills are bundled but not installed globally. Keep this repository available: the skill uses its question bank, workflows and CLI. You can also operate the CLI without an agent.
 
 The agent must assess unresolved decisions before ending a turn. `assess` reads discovery.json and returns continue, ask_user, blocked or complete, plus focused questions and independent work. See [continue-or-ask](workflows/continue-or-ask.md). A branch root is not a confirmed storytelling focus, and a generated preview is not a finished project. This protocol guides an agent; it cannot force the hosting app to keep a session running.
+
+Research is checked first through research/coverage.json. Filenames and links are not reviews. Relevant sources require findings artifacts and a current synthesis, or an explicit user approval tied to the current gaps. New sources or changed findings invalidate readiness/selection as appropriate. Both select and build enforce the gate, including for old workspaces. See [research-first workflow and state format](workflows/research-first.md). The gate checks recorded evidence, not the semantic quality of research or whether all possible external sources exist.
 
 ## Implemented and planned
 

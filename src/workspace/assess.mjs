@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {hash,read} from './store.mjs';
+import {researchGate} from './research.mjs';
 
 const topics=[
   ['storyFocus','Who should the website center on: one person, a couple, a family or a community—and what connects their story?'],
@@ -14,9 +15,11 @@ const exists=(root,file)=>fs.existsSync(path.join(root,file));
 const optional=(root,file,fallback)=>exists(root,file)?read(root,file):fallback;
 export function reviewFingerprint(root) {
   const file='build/index.html';
-  return hash({project:read(root,'project.json'),data:optional(root,'data/accepted.json',null),selection:optional(root,'publication/selection.json',null),html:exists(root,file)?hash(fs.readFileSync(path.join(root,file))):null});
+  return hash({research:researchGate(root).fingerprint,project:read(root,'project.json'),data:optional(root,'data/accepted.json',null),selection:optional(root,'publication/selection.json',null),html:exists(root,file)?hash(fs.readFileSync(path.join(root,file))):null});
 }
 export function assess(root) {
+  const research=researchGate(root);
+  if(!research.ready) return {stage:'research',action:research.action,next:research.next,questions:research.action==='ask_user'?[{key:research.gaps[0]?.id,question:research.next}]:[],independentWork:research.independentWork,unresolved:research.gaps,research,reviewCurrent:false};
   const progress=optional(root,'discovery.json',{schemaVersion:1,answers:{},tasks:[],review:null});
   if(progress.schemaVersion!==1 || typeof progress.answers!=='object' || !progress.answers || !Array.isArray(progress.tasks)) throw Error('Invalid discovery state');
   const answered=a=>a?.status==='confirmed' && a.by==='user' && typeof a.answer==='string' && a.answer.trim() && typeof a.evidence==='string' && a.evidence.trim();
@@ -41,5 +44,5 @@ export function assess(root) {
   else if(progress.answers.releaseScope.deliverable==='published') {action='blocked';next='Publication is outside the implemented workflow. Complete an authorized hosting workflow and verify the URL; a local preview is not a published website.';}
   else if(progress.answers.releaseScope.deliverable!=='preview') {action='ask_user';next='Should this release finish as a local preview or a published website?';questions.push({key:'releaseScope',question:next});}
   else {action='complete';next='The agreed local-preview scope is reviewed and no recorded work remains.';}
-  return {action,next,questions,independentWork:work.map(t=>({id:t.id,description:t.description})),unresolved:gaps,pendingTasks:pending,reviewFingerprint:fingerprint,reviewCurrent:Boolean(reviewComplete),limits:'Assessment uses recorded state, not proof that all possible research is exhausted. It cannot keep an agent session running or send questions itself.'};
+  return {stage:'planning',action,next,questions,independentWork:work.map(t=>({id:t.id,description:t.description})),unresolved:gaps,pendingTasks:pending,reviewFingerprint:fingerprint,reviewCurrent:Boolean(reviewComplete),research,limits:'Assessment uses recorded state, not proof that all possible research is exhausted. It cannot keep an agent session running or send questions itself.'};
 }

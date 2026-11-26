@@ -7,6 +7,7 @@ import {validate} from '../genealogy/validate.mjs';
 import {parseGedcom} from '../adapters/gedcom.mjs';
 import {build,validateSelection} from '../publication/build.mjs';
 import {assess} from '../workspace/assess.mjs';
+import {requireResearch,researchGate} from '../workspace/research.mjs';
 const repo=fileURLToPath(new URL('../../',import.meta.url));
 export function run(args) {
   const [cmd,dir,input]=args,root=path.resolve(dir||'.workspaces/demo');
@@ -31,6 +32,14 @@ export function run(args) {
     init(root);write(root,'project.json',read(repo,'examples/project.json'));
     run(['import',root,path.join(repo,'examples/family.json')]);
     run(['accept',root,hash(read(root,'proposals/import.json'))]);
+    // Demo inputs and confirmations are entirely fictional; never reuse for a real project.
+    const confirmation={status:'confirmed',by:'user',answer:'Fictional demo source set',evidence:'Bundled fictional demo scenario'};
+    write(root,'research/demo-review.json',{summary:'Reviewed the two fictional people and their cited example fact.'});
+    const imported=read(root,'research/coverage.json').sources;
+    write(root,'research/coverage.json',{schemaVersion:1,scope:confirmation,discovery:confirmation,sources:imported.map(s=>({...s,relevant:true,status:'reviewed',review:{artifact:'research/demo-review.json',summary:'Fictional dataset reviewed'}})),synthesis:null,proceedWithGaps:null});
+    const coverage=read(root,'research/coverage.json');
+    write(root,'research/synthesis.json',{summary:'A fictional two-generation family; no real family claims.'});
+    coverage.synthesis={artifact:'research/synthesis.json',inventoryFingerprint:researchGate(root).inventoryFingerprint};write(root,'research/coverage.json',coverage);
     run(['select',root,path.join(repo,'examples/selection.json')]);
     return run(['build',root]);
   }
@@ -50,6 +59,10 @@ export function run(args) {
       const old=fs.existsSync(path.join(root,'proposals/import.json'))?read(root,'proposals/import.json'):null;
       if(old) write(root,`proposals/history/${hash(old)}.json`,old);
       write(root,'proposals/import.json',proposal);receipt(root,'import',digest,hash(data));
+      const coverageFile=path.join(root,'research/coverage.json');
+      const coverage=fs.existsSync(coverageFile)?read(root,'research/coverage.json'):{schemaVersion:1,scope:null,discovery:null,sources:[],synthesis:null,proceedWithGaps:null};
+      const sourceId=`import-${digest}`;
+      if(!coverage.sources.some(s=>s.id===sourceId)) {coverage.sources.push({id:sourceId,location:sourceFile,relevant:true,status:'located'});write(root,'research/coverage.json',coverage);}
       return `Proposal prepared: ${data.people.length} people. Review proposals/import.json before accepting.`;
     }
     if(cmd==='accept') {
@@ -63,9 +76,10 @@ export function run(args) {
       write(root,'data/accepted.json',p.data);receipt(root,'accepted',hash(p),hash(p.data));return 'Accepted reviewed snapshot';
     }
     if(cmd==='select') {
+      const research=requireResearch(root);
       const p=read(root,'project.json'),d=validate(read(root,'data/accepted.json'));validateProject(p);
       const s=JSON.parse(fs.readFileSync(input,'utf8'));validateSelection(s,d);
-      write(root,'publication/selection.json',{personIds:s.personIds,factIds:s.factIds,familyIds:s.familyIds||[],inputHash:hash({project:p,data:d})});
+      write(root,'publication/selection.json',{personIds:s.personIds,factIds:s.factIds,familyIds:s.familyIds||[],inputHash:hash({project:p,data:d}),researchFingerprint:research.fingerprint});
       return 'Publication selection recorded; no deployment performed';
     }
     return build(root);

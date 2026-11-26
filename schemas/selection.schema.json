@@ -7,6 +7,7 @@
     "personIds": {"type": "array", "items": {"type": "string"}},
     "factIds": {"type": "array", "items": {"type": "string"}},
     "familyIds": {"type": "array", "items": {"type": "string"}},
+    "researchFingerprint": {"type":"string","pattern":"^[a-f0-9]{64}$"},
     "inputHash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
   }
 }

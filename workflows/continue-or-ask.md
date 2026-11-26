@@ -2,6 +2,8 @@
 
 Run `node src/cli/index.mjs assess DIR` at session start, after a milestone or user answer, and before the final response. `status` includes the same assessment. Building HTML is a milestone, not evidence that the user's website is complete.
 
+The research gate runs first. If stage is research, follow research-first.md: inspect sources, resolve access gaps or ask for explicit approval to proceed with listed gaps. Do not ask website-planning questions or write a website plan yet. All planning instructions below apply only after the gate opens.
+
 ## Check the brief, not just the files
 
 Keep `discovery.json` up to date from the conversation and source findings. For an older workspace, start with templates/discovery.json and reconcile existing decisions; do not ask users to repeat already explicit answers.

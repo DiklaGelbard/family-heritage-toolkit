@@ -3,6 +3,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {validate} from '../genealogy/validate.mjs';
 import {read,write,hash,receipt,validateProject} from '../workspace/store.mjs';
+import {requireResearch} from '../workspace/research.mjs';
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function validateSelection(s,data) {
   if(!Array.isArray(s.personIds)||!Array.isArray(s.factIds)) throw Error('Selection needs personIds and factIds');
@@ -23,10 +24,12 @@ export function validateSelection(s,data) {
   if(s.factIds.some(id=>!allowed.has(id))) throw Error('Selected fact is unknown or belongs to an excluded person');
 }
 export function build(root) {
+  const research=requireResearch(root);
   const project=read(root,'project.json');validateProject(project);
   const data=validate(read(root,'data/accepted.json')),approval=read(root,'publication/selection.json');
   const fingerprint=hash({project,data});
   if(approval.inputHash!==fingerprint) throw Error('Publication selection is stale; review it again');
+  if(approval.researchFingerprint!==research.fingerprint) throw Error('Research changed; review publication selection again');
   validateSelection(approval,data);
   const selected=new Set(approval.personIds);
   const families=(data.families||[]).filter(f=>(approval.familyIds||[]).includes(f.id)).map(f=>({id:f.id,partners:f.partners.filter(id=>selected.has(id)),children:f.children.filter(id=>selected.has(id)),events:f.events.filter(e=>approval.factIds.includes(e.id)).map(({type,value,date,place})=>({type,value,date,place}))}));

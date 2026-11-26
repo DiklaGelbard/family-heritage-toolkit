@@ -1,0 +1,20 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Research coverage v1",
+  "type":"object",
+  "required":["schemaVersion","scope","discovery","sources","synthesis","proceedWithGaps"],
+  "properties":{
+    "schemaVersion":{"const":1},
+    "scope":{"type":["object","null"]},
+    "discovery":{"type":["object","null"]},
+    "sources":{"type":"array","items":{"type":"object","required":["id","status"],"properties":{
+      "id":{"type":"string","minLength":1},"location":{"type":"string"},"relevant":{"type":"boolean"},
+      "status":{"enum":["located","pending_access","reviewed","unavailable","deferred"]},
+      "review":{"type":"object","required":["artifact","summary"],"properties":{"artifact":{"type":"string"},"summary":{"type":"string"}}},
+      "exclusion":{"type":"object"}
+    }}},
+    "synthesis":{"type":["object","null"],"required":["artifact","inventoryFingerprint"],"properties":{"artifact":{"type":"string"},"inventoryFingerprint":{"type":"string"}}},
+    "proceedWithGaps":{"type":["object","null"]}
+  },
+  "$comment":"Object confirmations require status=confirmed, by=user, a nonempty answer and evidence before readiness. proceedWithGaps additionally requires the current fingerprint. The runtime research gate validates readiness and local review artifacts; this schema permits unfinished research state."
+}
