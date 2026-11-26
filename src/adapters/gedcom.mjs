@@ -10,7 +10,7 @@ export function parseGedcom(text, sourceId) {
     if(n===0) {
       person=null;family=null;event=null;
       if(tag==='INDI') {person={id:xref?.slice(1,-1),name:'',parents:[],facts:[]};people.push(person);}
-      else if(tag==='FAM') {family={id:xref?.slice(1,-1),parents:[],children:[]};families.push(family);}
+      else if(tag==='FAM') {family={id:xref?.slice(1,-1),partners:[],children:[],events:[],citation:{sourceId,locator:xref?.slice(1,-1)}};families.push(family);}
       else if(!['HEAD','TRLR'].includes(tag)) warnings.push(`Record ${tag} retained in original only`);
       continue;
     }
@@ -21,17 +21,22 @@ export function parseGedcom(text, sourceId) {
       else if(tag==='DATE' && event && n===2) person.facts.push({id:`${person.id}-${event}-${person.facts.length}`,type:event==='BIRT'?'birth':'death',value:raw,citation:{sourceId,locator:`${person.id}/${event}/DATE`}});
       else warnings.push(`${person.id}: ${tag} retained in original only`);
     } else if(family) {
-      if(['HUSB','WIFE'].includes(tag)) family.parents.push(raw.replaceAll('@',''));
-      else if(tag==='CHIL') family.children.push(raw.replaceAll('@',''));
-      else warnings.push(`Family ${tag} retained in original only`);
+      if(n===1) event=null;
+      if(n===1 && ['HUSB','WIFE'].includes(tag)) family.partners.push(raw.replaceAll('@',''));
+      else if(n===1 && tag==='CHIL') family.children.push(raw.replaceAll('@',''));
+      else if(n===1 && ['MARR','DIV'].includes(tag)) {
+        event={id:`${family.id}-${tag}-${family.events.length}`,type:tag==='MARR'?'marriage':'divorce',value:raw,date:null,place:null,citation:{sourceId,locator:`${family.id}/${tag}`}};
+        family.events.push(event);
+      } else if(n===2 && event && ['DATE','PLAC'].includes(tag)) event[tag==='DATE'?'date':'place']=raw;
+      else warnings.push(`${family.id}: ${tag} retained in original only`);
     }
   }
   if(!people.length) throw Error('No people found in GEDCOM');
   for(const f of families) for(const id of f.children) {
     const p=people.find(p=>p.id===id);if(!p) throw Error(`Missing child ${id}`);
-    p.parents=[...new Set([...p.parents,...f.parents])];
+    p.parents=[...new Set([...p.parents,...f.partners])];
   }
-  warnings.push('Subset import: names, birth/death date text and parent links only. Marriage, spouse-only links, relationship types and other fields are not modeled; review original before accepting.');
-  return {schemaVersion:1,people,sources:[{id:sourceId,title:'Imported GEDCOM'}],warnings};
+  warnings.push('Subset import: names, birth/death dates, FAM partners/children and MARR/DIV dates/places. Other fields remain in original. Parent links do not assert biological parentage; adoption/pedigree qualifiers require review. A family alone does not establish marriage.');
+  return {schemaVersion:2,people,families,sources:[{id:sourceId,title:'Imported GEDCOM'}],warnings};
 }
 export const capabilities={read:true,write:false,formats:['GEDCOM subset','toolkit JSON']};

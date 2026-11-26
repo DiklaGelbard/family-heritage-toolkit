@@ -1,10 +1,20 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Minimal family dataset v1",
+  "title": "Family dataset v1/v2",
   "type": "object",
   "required": ["schemaVersion", "people", "sources"],
   "properties": {
-    "schemaVersion": {"const": 1},
+    "schemaVersion": {"enum": [1, 2]},
+    "families": {"type":"array","items":{"type":"object","required":["id","partners","children","events","citation"],"properties":{
+      "id":{"type":"string","pattern":"^[A-Za-z0-9_.-]+$"},
+      "partners":{"type":"array","uniqueItems":true,"items":{"type":"string"}},
+      "children":{"type":"array","uniqueItems":true,"items":{"type":"string"}},
+      "citation":{"$ref":"#/$defs/citation"},
+      "events":{"type":"array","items":{"type":"object","required":["id","type","value","date","place","citation"],"properties":{
+        "id":{"type":"string"},"type":{"enum":["marriage","divorce"]},"value":{"type":"string"},
+        "date":{"type":["string","null"]},"place":{"type":["string","null"]},"citation":{"$ref":"#/$defs/citation"}
+      }}}
+    }}},
     "sources": {"type": "array", "items": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string", "minLength": 1}, "title": {"type": "string"}}}},
     "warnings": {"type": "array", "items": {"type": "string"}},
     "people": {"type": "array", "items": {
@@ -22,5 +32,7 @@
         }}
       }
     }}
-  }
+  },
+  "$defs":{"citation":{"type":"object","required":["sourceId","locator"],"properties":{"sourceId":{"type":"string"},"locator":{"type":"string"}}}},
+  "allOf":[{"if":{"properties":{"schemaVersion":{"const":2}}},"then":{"required":["families"]},"else":{"not":{"required":["families"]}}}]
 }

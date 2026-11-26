@@ -63,7 +63,7 @@ export function run(args) {
     if(cmd==='select') {
       const p=read(root,'project.json'),d=validate(read(root,'data/accepted.json'));validateProject(p);
       const s=JSON.parse(fs.readFileSync(input,'utf8'));validateSelection(s,d);
-      write(root,'publication/selection.json',{personIds:s.personIds,factIds:s.factIds,inputHash:hash({project:p,data:d})});
+      write(root,'publication/selection.json',{personIds:s.personIds,factIds:s.factIds,familyIds:s.familyIds||[],inputHash:hash({project:p,data:d})});
       return 'Publication selection recorded; no deployment performed';
     }
     return build(root);

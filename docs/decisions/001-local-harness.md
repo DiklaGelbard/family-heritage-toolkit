@@ -1,5 +1,7 @@
 # Local harness first
 
+Historical v0.1 decision below. v0.2 now models families and marriage/divorce events; see ../families.md. Other planned features remain unimplemented.
+
 Use dependency-free Node.js commands, standard skills and versioned JSON workspace files. Keep agent judgment outside deterministic transforms. No model SDK, workflow DSL, database or service scheduler in v0.1.
 
 Accepted snapshots and publication selections are distinct. Bind selections to a hash of configuration plus accepted records. Preserve originals and operation receipts. Repeated imports must not duplicate records. Resume through status rather than chat memory. Historical accepted snapshots are retained before replacement.

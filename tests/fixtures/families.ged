@@ -1,0 +1,38 @@
+0 HEAD
+1 GEDC
+2 VERS 5.5.1
+0 @I1@ INDI
+1 NAME Alex /Example/
+0 @I2@ INDI
+1 NAME Robin /Example/
+0 @I3@ INDI
+1 NAME Sam /Example/
+0 @I4@ INDI
+1 NAME Child One /Example/
+0 @I5@ INDI
+1 NAME Child Two /Example/
+0 @I6@ INDI
+1 NAME Unknown Partner Child /Example/
+0 @I7@ INDI
+1 NAME Pat /Example/
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 CHIL @I4@
+1 MARR
+2 DATE ABT 1980
+2 PLAC Example City
+1 DIV
+2 DATE 1990
+0 @F2@ FAM
+1 HUSB @I1@
+1 WIFE @I3@
+1 CHIL @I5@
+1 MARR Y
+0 @F3@ FAM
+1 WIFE @I2@
+1 CHIL @I6@
+0 @F4@ FAM
+1 HUSB @I3@
+1 WIFE @I7@
+0 TRLR

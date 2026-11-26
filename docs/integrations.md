@@ -3,8 +3,8 @@
 | Integration | v0.1 capability | Next step |
 | --- | --- | --- |
 | Local JSON | Import, validate, stage a reviewed snapshot | Reconciliation of independently sourced claims |
-| GEDCOM | Limited read-only import with warnings | Fixtures for custom fields, Hebrew continuation bytes, families and calendars |
-| Website | Local RTL/LTR person-card preview | Cover, albums, audio and hosting adapters |
+| GEDCOM | Names, birth/death dates, families, MARR/DIV date/place text with warnings | Custom fields, Hebrew continuation bytes, pedigree qualifiers and calendars |
+| Website | Local RTL/LTR person and family sections | Cover, albums, audio and hosting adapters |
 | MyHeritage | Not implemented | Reviewed diffs and browser-assisted edits with destination verification |
 | BillionGraves | Not implemented | Source-linked research and identity review |
 | Google Photos | Not implemented | Selected imports and source-link manifests; do not promise shared-album sync |
