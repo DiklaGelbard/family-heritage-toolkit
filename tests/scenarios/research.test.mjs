@@ -16,7 +16,7 @@ test('legacy workspace cannot plan or build without research coverage',t=>{
 });
 test('filename-only source is unfinished; reviewed status without actual artifact is insufficient',t=>{
   const root=workspace(t),c=read(root,'research/coverage.json');c.sources.push({id:'interview',relevant:true,status:'located',location:'folder/interview'});write(root,'research/coverage.json',c);
-  let a=JSON.parse(run(['assess',root]));assert.equal(a.stage,'research');assert.equal(a.action,'continue');assert.match(a.next,/Inspect source/);
+  let a=JSON.parse(run(['assess',root]));assert.equal(a.stage,'research');assert.equal(a.action,'continue');assert.equal(a.independentWork[0].id,'interview');
   c.sources[1].status='reviewed';c.sources[1].review={summary:'Read it',artifact:'research/missing.json'};write(root,'research/coverage.json',c);
   assert.equal(researchGate(root).ready,false);assert.ok(researchGate(root).gaps.some(g=>g.id==='source:interview'));
 });

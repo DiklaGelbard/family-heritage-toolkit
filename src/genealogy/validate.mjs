@@ -1,3 +1,4 @@
+import {validateEvents} from './events.mjs';
 export function validate(data) {
   if(![1,2].includes(data.schemaVersion) || !Array.isArray(data.people) || !Array.isArray(data.sources)) throw Error('Unsupported dataset');
   const ids=new Set(),sources=new Set(),factIds=new Set();
@@ -44,5 +45,5 @@ export function validate(data) {
     visited.add(id);
   }
   for(const p of data.people) visit(p.id);
-  return data;
+  validateEvents(data);return data;
 }

@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import {validate} from '../genealogy/validate.mjs';
 import {read,write,hash,receipt,validateProject} from '../workspace/store.mjs';
 import {requireResearch} from '../workspace/research.mjs';
+import {publishEvents,renderJourney} from './journey.mjs';
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function mediaUrl(value) {
   try {const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;} catch {return null;}
@@ -30,6 +31,7 @@ export function validateSelection(s,data) {
     if(f.partners.length && f.partners.every(id=>selected.has(id))) for(const e of f.events) allowed.add(e.id);
   }
   if(s.factIds.some(id=>!allowed.has(id))) throw Error('Selected fact is unknown or belongs to an excluded person');
+  publishEvents(data,s);
 }
 export function build(root) {
   const research=requireResearch(root);
@@ -65,13 +67,16 @@ export function build(root) {
     return `<details class="person" id="${escape(p.id)}"><summary><h2>${escape(p.name)}</h2><div class="dates">${dates}</div><span class="expand">${he?'לפתיחת הכרטיס':'Open person card'}</span></summary><div class="person-content">${portrait?picture(portrait,p.name):''}${story}${extra}${grave?`<figure>${picture(grave,he?`מצבת ${p.name}`:`Gravestone of ${p.name}`)}<figcaption>${he?'צילום מצבה':'Gravestone photograph'}</figcaption></figure>`:''}${record?`<p><a href="${escape(graveRecord(record.value))}" target="_blank" rel="noopener noreferrer">${he?'לרשומת הקבר ב־BillionGraves':'View grave record on BillionGraves'}</a></p>`:''}${p.parents.length?`<p>${labels.parents}: ${links(p.parents)}</p>`:''}${families.filter(f=>f.partners.includes(p.id)||f.children.includes(p.id)).map(f=>`<p><a href="#family-${escape(f.id)}">${labels.family}: ${escape(familyTitle(f))}</a></p>`).join('')}</div></details>`;
   }).join('\n');
   const familyHtml=families.map(f=>`<section class="family" id="family-${escape(f.id)}"><h2>${labels.family}: ${escape(familyTitle(f))}</h2>${f.partners.length?`<p>${labels.partners}: ${links(f.partners)}</p>`:''}${f.children.length?`<p>${labels.children}: ${links(f.children)}</p>`:''}${f.events.map(e=>`<p><strong>${labels[e.type]}</strong>${[e.date,e.place,e.value && e.value!=='Y'?e.value:null].filter(Boolean).map(x=>`: ${escape(x)}`).join('')}</p>`).join('')}</section>`).join('\n');
-  const body=peopleHtml+familyHtml;
+  const events=publishEvents(data,approval);
+  const eventLinks=p=>events.filter(e=>e.personIds.includes(p.id)).map(e=>`<a href="#event-${escape(e.id)}">${escape(e.title)}</a>`).join(' · ');
+  const references=visible.filter(p=>eventLinks(p)).map(p=>`<p>${escape(p.name)}: ${eventLinks(p)}</p>`).join('');
+  const body=renderJourney(events,project.language)+references+peopleHtml+familyHtml;
   const template=fs.readFileSync(fileURLToPath(new URL('../../website/index.html',import.meta.url)),'utf8');
   // Replace markers once through a callback so family text cannot become template syntax.
   const replacements={LANG:project.language,DIR:project.language==='he'?'rtl':'ltr',TITLE:escape(project.title),BODY:body};
   const html=template.replace(/\{\{(LANG|DIR|TITLE|BODY)\}\}/g,(_,key)=>replacements[key]);
   const out=path.join(root,'build');fs.mkdirSync(out,{recursive:true});
   fs.writeFileSync(path.join(out,'index.html'),html,{mode:0o600});
-  write(root,'build/publication.json',{title:project.title,people:visible,families});
+  write(root,'build/publication.json',{title:project.title,people:visible,families,events});
   receipt(root,'preview',fingerprint,hash(html));return path.join(out,'index.html');
 }

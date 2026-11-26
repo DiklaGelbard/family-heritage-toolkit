@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
   "sources": [{"id":"s1","title":"Fictional interview"}],
+  "events": [
+    {"id":"journey-one","title":"המסע הראשון — דוגמה","summary":"אירוע בדיוני להדגמת מסלול סיפורי.","personIds":["p1"],"date":{"kind":"approximate","text":"1950"},"place":{"name":"עיר לדוגמה"},"status":"confirmed","citations":[{"sourceId":"s1","locator":"fictional example 1"}],"journeyIds":["first"]},
+    {"id":"shared-home","title":"בית משותף — דוגמה","summary":"שני מסלולים מתחברים לאותו אירוע בדיוני.","personIds":["p1","p2"],"date":{"kind":"by","text":"1980"},"place":{"name":"יישוב לדוגמה"},"status":"confirmed","citations":[{"sourceId":"s1","locator":"fictional example 2"}],"journeyIds":["first","second"]},
+    {"id":"earlier-chapter","parentId":"journey-one","title":"פרק מוקדם יותר","summary":"אפשר להרחיב ולקרוא רקע מוקדם.","personIds":["p1"],"date":{"kind":"unknown","text":""},"status":"confirmed","citations":[{"sourceId":"s1","locator":"fictional example 3"}]}
+  ],
   "people": [
     {"id":"p1","name":"מרים לדוגמה","parents":[],"facts":[{"id":"f1","type":"birth","value":"1932 (fictional)","citation":{"sourceId":"s1","locator":"00:01:20"}}]},
     {"id":"p2","name":"דנה לדוגמה","parents":["p1"],"facts":[]}

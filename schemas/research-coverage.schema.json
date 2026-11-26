@@ -1,21 +1,191 @@
 {
-  "$schema":"https://json-schema.org/draft/2020-12/schema",
-  "title":"Research coverage v1",
-  "type":"object",
-  "required":["schemaVersion","scope","discovery","sources","synthesis","proceedWithGaps"],
-  "properties":{
-    "schemaVersion":{"const":1},
-    "scope":{"type":["object","null"]},
-    "discovery":{"type":["object","null"]},
-    "externalDiscovery":{"type":["object","null"],"properties":{"choice":{"enum":["requested","declined","deferred"]},"scopeFingerprint":{"type":"string"},"searches":{"type":"array","items":{"type":"object","required":["id","target","provider","status"],"properties":{"id":{"type":"string"},"target":{"type":"string"},"provider":{"type":"string"},"status":{"enum":["pending","blocked","completed"]},"report":{"type":"string"},"outcome":{"enum":["matched","possible_matches","no_match"]},"sourceIds":{"type":"array","items":{"type":"string"}}}}}},
-    "sources":{"type":"array","items":{"type":"object","required":["id","status"],"properties":{
-      "id":{"type":"string","minLength":1},"location":{"type":"string"},"relevant":{"type":"boolean"},
-      "status":{"enum":["located","pending_access","reviewed","unavailable","deferred"]},
-      "review":{"type":"object","required":["artifact","summary"],"properties":{"artifact":{"type":"string"},"summary":{"type":"string"}}},
-      "exclusion":{"type":"object"}
-    }}},
-    "synthesis":{"type":["object","null"],"required":["artifact","inventoryFingerprint"],"properties":{"artifact":{"type":"string"},"inventoryFingerprint":{"type":"string"}}},
-    "proceedWithGaps":{"type":["object","null"]}
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Research coverage v1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "scope",
+    "discovery",
+    "sources",
+    "synthesis",
+    "proceedWithGaps"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "scope": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "discovery": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "externalDiscovery": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "choice": {
+          "enum": [
+            "requested",
+            "declined",
+            "deferred"
+          ]
+        },
+        "scopeFingerprint": {
+          "type": "string"
+        },
+        "searches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "target",
+              "provider",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "pending",
+                  "blocked",
+                  "completed"
+                ]
+              },
+              "report": {
+                "type": "string"
+              },
+              "outcome": {
+                "enum": [
+                  "matched",
+                  "possible_matches",
+                  "no_match"
+                ]
+              },
+              "sourceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "location": {
+            "type": "string"
+          },
+          "relevant": {
+            "type": "boolean"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "extent": {
+            "type": "object",
+            "required": [
+              "unit",
+              "total"
+            ],
+            "properties": {
+              "unit": {
+                "enum": [
+                  "seconds",
+                  "pages",
+                  "items"
+                ]
+              },
+              "total": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            }
+          },
+          "status": {
+            "enum": [
+              "located",
+              "pending_access",
+              "reviewed",
+              "unavailable",
+              "deferred"
+            ]
+          },
+          "review": {
+            "type": "object",
+            "required": [
+              "artifact",
+              "summary"
+            ],
+            "properties": {
+              "artifact": {
+                "type": "string"
+              },
+              "summary": {
+                "type": "string"
+              }
+            }
+          },
+          "exclusion": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "synthesis": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "artifact",
+        "inventoryFingerprint"
+      ],
+      "properties": {
+        "artifact": {
+          "type": "string"
+        },
+        "inventoryFingerprint": {
+          "type": "string"
+        }
+      }
+    },
+    "proceedWithGaps": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
   },
-  "$comment":"Object confirmations require status=confirmed, by=user, a nonempty answer and evidence before readiness. proceedWithGaps additionally requires the current fingerprint. The runtime research gate validates readiness and local review artifacts; this schema permits unfinished research state."
+  "$comment": "Object confirmations require status=confirmed, by=user, a nonempty answer and evidence before readiness. proceedWithGaps additionally requires the current fingerprint. The runtime research gate validates readiness and local review artifacts; this schema permits unfinished research state."
 }

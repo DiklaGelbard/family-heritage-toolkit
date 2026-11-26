@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {read,hash} from './store.mjs';
 import {assessExternal} from './external-discovery.mjs';
+import {sourceCoverage} from './coverage.mjs';
 
 export const confirmed=x=>x?.status==='confirmed' && x.by==='user' && typeof x.answer==='string' && x.answer.trim() && typeof x.evidence==='string' && x.evidence.trim();
 function artifact(root,relative) {
@@ -18,6 +19,13 @@ export function researchGate(root) {
   const coverage=fs.existsSync(file)?read(root,'research/coverage.json'):{schemaVersion:1,scope:null,discovery:null,sources:[],synthesis:null,proceedWithGaps:null};
   if(coverage.schemaVersion!==1 || !Array.isArray(coverage.sources)) throw Error('Invalid research coverage');
   const gaps=[],work=[],ids=new Set(),artifacts={};
+  const allCoordination=fs.existsSync(path.join(root,'work.json'))?read(root,'work.json'):null;
+  const coordination=allCoordination?{tasks:allCoordination.tasks.filter(t=>t.phase==='research'),questions:allCoordination.questions.filter(q=>q.phase!=='planning')}:null;
+  for(const t of coordination?.tasks||[]) if(t.phase==='research') {
+    const digest=t.status==='done'?artifact(root,t.artifact):null;artifacts[`task:${t.id}`]=digest;
+    if(t.status!=='done'||!digest) {gaps.push({id:`task:${t.id}`,question:`Research task ${t.id} is not verified complete.`});work.push({id:`task:${t.id}`,description:t.status==='running'?`Check progress of ${t.owner} on ${t.description}; do not duplicate its work.`:`Complete coordinated research task: ${t.description}`});}
+  }
+  for(const q of coordination?.questions||[]) if(q.status==='pending') gaps.push({id:`question:${q.id}`,question:q.text});
   if(!confirmed(coverage.scope)) gaps.push({id:'researchScope',question:'Which family branches, people and places should the research cover? We will choose the website story after reviewing the sources.'});
   if(!confirmed(coverage.discovery)) gaps.push({id:'sourceDiscovery',question:'Beyond the sources already identified, what other albums, recordings, documents, relevant emails or family-tree websites are available? Nothing else for now is a valid answer.'});
   const external=assessExternal(root,coverage,confirmed,artifact);
@@ -28,9 +36,10 @@ export function researchGate(root) {
     if(s.relevant===false && confirmed(s.exclusion)) continue;
     if(s.relevant!==true) gaps.push({id:`relevance:${s.id}`,question:`Confirm whether source ${s.id} is relevant to this research, or document an explicit exclusion.`});
     const digest=artifact(root,s.review?.artifact);artifacts[s.id]=digest;
-    if(s.status!=='reviewed'||!digest||!s.review?.summary?.trim()) {
+    const completeness=sourceCoverage(s,file=>artifact(root,file));artifacts[`coverage:${s.id}`]=completeness.hashes;
+    if(s.status!=='reviewed'||!digest||!s.review?.summary?.trim()||!completeness.complete) {
       gaps.push({id:`source:${s.id}`,question:`Source ${s.id} has not been reviewed with recorded findings. Provide access, review it, or explicitly approve proceeding with this gap.`});
-      if(s.status==='located') work.push({id:s.id,description:`Inspect source ${s.id} and save findings with citations; a filename or link is not a content review.`});
+      if(s.status==='located'||s.status==='reviewed'&&!completeness.complete) work.push({id:s.id,description:`Review source ${s.id}: ${completeness.missing.join('; ')||'inspect contents and save findings with citations'}. A filename or excerpt is not a complete review.`});
     }
   }
   for(const s of project.sources||[]) {
@@ -39,7 +48,7 @@ export function researchGate(root) {
   if(!coverage.sources.length) gaps.push({id:'emptyInventory',question:'No research sources are inventoried. Identify available material or explicitly approve a source-free draft.'});
   const synthesisHash=artifact(root,coverage.synthesis?.artifact);
   // Synthesis must describe this inventory, not an earlier source set.
-  const inventoryFingerprint=hash({scope:coverage.scope,discovery:coverage.discovery,sources:coverage.sources,projectScope:project.scope,projectSources:project.sources||[],artifacts,externalDiscovery:coverage.externalDiscovery,externalFingerprint:external.opportunities.fingerprint,externalArtifacts:external.artifacts});
+  const inventoryFingerprint=hash({scope:coverage.scope,discovery:coverage.discovery,sources:coverage.sources,projectScope:project.scope,projectSources:project.sources||[],artifacts,coordination,externalDiscovery:coverage.externalDiscovery,externalFingerprint:external.opportunities.fingerprint,externalArtifacts:external.artifacts});
   if(!synthesisHash||coverage.synthesis?.inventoryFingerprint!==inventoryFingerprint) gaps.push({id:'synthesis',question:'Prepare a current research synthesis: supported stories, citations, contradictions, unread material and gaps. Do not plan the website yet.'});
   const fingerprint=hash({inventoryFingerprint,synthesis:coverage.synthesis,synthesisHash});
   const override=confirmed(coverage.proceedWithGaps)&&coverage.proceedWithGaps.fingerprint===fingerprint;

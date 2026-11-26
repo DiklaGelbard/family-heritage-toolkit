@@ -8,12 +8,17 @@ import {parseGedcom} from '../adapters/gedcom.mjs';
 import {build,validateSelection} from '../publication/build.mjs';
 import {assess} from '../workspace/assess.mjs';
 import {requireResearch,researchGate} from '../workspace/research.mjs';
+import {intake} from '../workspace/intake.mjs';
+import {coordinate} from '../workspace/coordination.mjs';
+import {annotate} from '../workspace/photo-review.mjs';
+import {saveTranscript} from '../workspace/transcript.mjs';
 const repo=fileURLToPath(new URL('../../',import.meta.url));
 export function run(args) {
   const [cmd,dir,input]=args,root=path.resolve(dir||'.workspaces/demo');
   if(cmd==='init') {init(root);return root;}
   if(cmd==='questions') return fs.readFileSync(path.join(repo,'templates/interview.json'),'utf8');
   if(cmd==='assess') return JSON.stringify(assess(root),null,2);
+  if(['intake','task','annotate','transcript'].includes(cmd)) return locked(root,()=>JSON.stringify(({intake,task:coordinate,annotate,transcript:saveTranscript})[cmd](root,JSON.parse(fs.readFileSync(input,'utf8'))),null,2));
   if(cmd==='status') {
     const state=read(root,'state.json');
     let next='Complete discovery and import sources',proposalHash=null;
@@ -45,7 +50,7 @@ export function run(args) {
     run(['select',root,path.join(repo,'examples/selection.json')]);
     return run(['build',root]);
   }
-  if(!['import','accept','select','build'].includes(cmd)) throw Error('Commands: init DIR | questions | status DIR | assess DIR | import DIR FILE | accept DIR DIGEST | select DIR FILE | build DIR | demo [DIR]');
+  if(!['import','accept','select','build'].includes(cmd)) throw Error('Commands: init DIR | questions | status DIR | assess DIR | intake DIR FILE | transcript DIR FILE | task DIR FILE | annotate DIR FILE | import DIR FILE | accept DIR DIGEST | select DIR FILE | build DIR | demo [DIR]');
   return locked(root,()=>{
     if(cmd==='import') {
       validateProject(read(root,'project.json'));
@@ -81,7 +86,7 @@ export function run(args) {
       const research=requireResearch(root);
       const p=read(root,'project.json'),d=validate(read(root,'data/accepted.json'));validateProject(p);
       const s=JSON.parse(fs.readFileSync(input,'utf8'));validateSelection(s,d);
-      write(root,'publication/selection.json',{personIds:s.personIds,factIds:s.factIds,familyIds:s.familyIds||[],inputHash:hash({project:p,data:d}),researchFingerprint:research.fingerprint});
+      write(root,'publication/selection.json',{personIds:s.personIds,factIds:s.factIds,familyIds:s.familyIds||[],eventIds:s.eventIds||[],eventMediaIds:s.eventMediaIds||[],inputHash:hash({project:p,data:d}),researchFingerprint:research.fingerprint});
       return 'Publication selection recorded; no deployment performed';
     }
     return build(root);
