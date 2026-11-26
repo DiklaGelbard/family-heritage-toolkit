@@ -29,11 +29,14 @@ node src/cli/index.mjs accept /path/to/private-family-workspace REVIEWED_HASH
 node src/cli/index.mjs select /path/to/private-family-workspace /path/to/selection.json
 node src/cli/index.mjs build /path/to/private-family-workspace
 node src/cli/index.mjs status /path/to/private-family-workspace
+node src/cli/index.mjs assess /path/to/private-family-workspace
 ```
 
 ## Using an agent
 
 Ask the agent to read AGENTS.md and skills/discovery-interview/SKILL.md, then start a project in a separate workspace. Skills are bundled but not installed globally. Keep this repository available: the skill uses its question bank, workflows and CLI. You can also operate the CLI without an agent.
+
+The agent must assess unresolved decisions before ending a turn. `assess` reads discovery.json and returns continue, ask_user, blocked or complete, plus focused questions and independent work. See [continue-or-ask](workflows/continue-or-ask.md). A branch root is not a confirmed storytelling focus, and a generated preview is not a finished project. This protocol guides an agent; it cannot force the hosting app to keep a session running.
 
 ## Implemented and planned
 

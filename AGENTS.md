@@ -9,3 +9,5 @@ Use stable IDs and source citations; names alone are not identity keys. Preserve
 Discovery skill: skills/discovery-interview/SKILL.md. Resume a workspace with node src/cli/index.mjs status DIR. v0.2 has no external-service writes. For family relationship support and v1 migration, read docs/families.md. Never infer couples from flattened parent lists.
 
 Every new project must include an additional-source discovery round, even if files were supplied in the handoff. Summarize known sources, ask what else is available, and persist the answer or pending question. Follow the discovery skill; do not assume the supplied inventory is exhaustive.
+
+Before ending a turn, follow workflows/continue-or-ask.md and run `node src/cli/index.mjs assess DIR`. Maintain discovery.json from actual user answers and task evidence. A built preview does not mean the website goal is complete. If an answer is required, ask a focused question in the user-visible response rather than only announcing that questions are pending. If independent authorized work remains, continue it. Never treat the tree's root person as a confirmed narrative focus.

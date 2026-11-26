@@ -6,11 +6,13 @@ import {init,read,write,hash,receipt,validateProject,locked} from '../workspace/
 import {validate} from '../genealogy/validate.mjs';
 import {parseGedcom} from '../adapters/gedcom.mjs';
 import {build,validateSelection} from '../publication/build.mjs';
+import {assess} from '../workspace/assess.mjs';
 const repo=fileURLToPath(new URL('../../',import.meta.url));
 export function run(args) {
   const [cmd,dir,input]=args,root=path.resolve(dir||'.workspaces/demo');
   if(cmd==='init') {init(root);return root;}
   if(cmd==='questions') return fs.readFileSync(path.join(repo,'templates/interview.json'),'utf8');
+  if(cmd==='assess') return JSON.stringify(assess(root),null,2);
   if(cmd==='status') {
     const state=read(root,'state.json');
     let next='Complete discovery and import sources',proposalHash=null;
@@ -23,7 +25,7 @@ export function run(args) {
       else if(read(root,'publication/selection.json').inputHash!==hash({project:read(root,'project.json'),data:accepted})) next='Publication selection is stale; review again';
       else next='Build or inspect preview; no external deployment has been performed';
     }
-    return JSON.stringify({...state,proposalHash,next},null,2);
+    return JSON.stringify({...state,proposalHash,next,assessment:assess(root)},null,2);
   }
   if(cmd==='demo') {
     init(root);write(root,'project.json',read(repo,'examples/project.json'));
@@ -32,7 +34,7 @@ export function run(args) {
     run(['select',root,path.join(repo,'examples/selection.json')]);
     return run(['build',root]);
   }
-  if(!['import','accept','select','build'].includes(cmd)) throw Error('Commands: init DIR | questions | status DIR | import DIR FILE | accept DIR DIGEST | select DIR FILE | build DIR | demo [DIR]');
+  if(!['import','accept','select','build'].includes(cmd)) throw Error('Commands: init DIR | questions | status DIR | assess DIR | import DIR FILE | accept DIR DIGEST | select DIR FILE | build DIR | demo [DIR]');
   return locked(root,()=>{
     if(cmd==='import') {
       validateProject(read(root,'project.json'));
