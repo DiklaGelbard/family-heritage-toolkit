@@ -11,6 +11,8 @@ After the research gate opens, confirm narrative focus separately from genealogi
 
 ## Discover additional sources
 
+When photo collections need names or corrections, offer [guided photo tagging](../../workflows/photo-tagging-review.md): show one image at a time, collect or confirm user-provided labels, and preserve uncertainty and progress. Do not infer identity from appearance. This source-review activity can precede website planning.
+
 Include [proactive external-source discovery](../../workflows/external-source-discovery.md), not just collection of existing files. Ask about investigating missing dates, burial locations and grave photographs through BillionGraves or other cemetery sources, plus relevant external family trees/archives. Use specific candidates from assess after checking originals for importer omissions. Ask for cemetery leads and name variants. Record requested/declined/deferred and track requested work; do not silently omit this round or infer permission from another project.
 
 Finding some existing material does not complete source discovery. Before closing the initial interview:

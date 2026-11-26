@@ -44,6 +44,8 @@ Research is checked first through research/coverage.json. Filenames and links ar
 
 ## Implemented and planned
 
+Person cards now expand to show explicitly selected portrait, biography and (for deceased people) grave photo/BillionGraves link. Selected birth/death dates remain visible on the collapsed card. See docs/person-cards.md. A guided photo-tagging review workflow is available in workflows/photo-tagging-review.md; a dedicated tagging application is not implemented.
+
 External discovery now proposes grave-research opportunities from explicitly deceased accepted records and asks about BillionGraves/cemetery and other external sources. Decisions and requested search reports are tracked by the research gate. The agent conducts authorized searches with available tools; an automated scraper/API adapter is not implemented. See workflows/external-source-discovery.md.
 
 Implemented: guided discovery skill; fictional Hebrew example; JSON and limited GEDCOM intake; partners, family-specific children, marriage/divorce events with dates and places; preserved source copies; validation; reviewed snapshot acceptance; explicit publication selection; stale-selection checks; RTL/LTR HTML preview; persistent receipts and a single-writer lock.

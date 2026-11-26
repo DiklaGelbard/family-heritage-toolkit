@@ -60,7 +60,7 @@ test('HTML escapes source content and private fields never enter build',t=>{
   const root=workspace(t);run(['demo',root]);const d=read(root,'data/accepted.json');
   d.people[0].name='<script>alert(1)</script>';d.people[0].secret='never publish';write(root,'data/accepted.json',d);
   run(['select',root,'examples/selection.json']);run(['build',root]);
-  const html=fs.readFileSync(path.join(root,'build/index.html'),'utf8');assert.doesNotMatch(html,/<script>|never publish/);assert.match(html,/&lt;script&gt;/);
+  const html=fs.readFileSync(path.join(root,'build/index.html'),'utf8');assert.doesNotMatch(html,/<script>alert\(1\)<\/script>|never publish/);assert.match(html,/&lt;script&gt;/);
 });
 test('unknown facts and concurrent writer are rejected',t=>{
   const root=workspace(t);run(['demo',root]);write(root,'bad-selection.json',{personIds:['p2'],factIds:['f1']});
