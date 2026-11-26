@@ -7,6 +7,7 @@
     "schemaVersion":{"const":1},
     "scope":{"type":["object","null"]},
     "discovery":{"type":["object","null"]},
+    "externalDiscovery":{"type":["object","null"],"properties":{"choice":{"enum":["requested","declined","deferred"]},"scopeFingerprint":{"type":"string"},"searches":{"type":"array","items":{"type":"object","required":["id","target","provider","status"],"properties":{"id":{"type":"string"},"target":{"type":"string"},"provider":{"type":"string"},"status":{"enum":["pending","blocked","completed"]},"report":{"type":"string"},"outcome":{"enum":["matched","possible_matches","no_match"]},"sourceIds":{"type":"array","items":{"type":"string"}}}}}},
     "sources":{"type":"array","items":{"type":"object","required":["id","status"],"properties":{
       "id":{"type":"string","minLength":1},"location":{"type":"string"},"relevant":{"type":"boolean"},
       "status":{"enum":["located","pending_access","reviewed","unavailable","deferred"]},

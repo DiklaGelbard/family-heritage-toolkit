@@ -38,6 +38,8 @@ export function run(args) {
     const imported=read(root,'research/coverage.json').sources;
     write(root,'research/coverage.json',{schemaVersion:1,scope:confirmation,discovery:confirmation,sources:imported.map(s=>({...s,relevant:true,status:'reviewed',review:{artifact:'research/demo-review.json',summary:'Fictional dataset reviewed'}})),synthesis:null,proceedWithGaps:null});
     const coverage=read(root,'research/coverage.json');
+    coverage.externalDiscovery={...confirmation,choice:'declined',answer:'Fictional demo: no external searches',scopeFingerprint:researchGate(root).externalOpportunities.fingerprint};
+    write(root,'research/coverage.json',coverage);
     write(root,'research/synthesis.json',{summary:'A fictional two-generation family; no real family claims.'});
     coverage.synthesis={artifact:'research/synthesis.json',inventoryFingerprint:researchGate(root).inventoryFingerprint};write(root,'research/coverage.json',coverage);
     run(['select',root,path.join(repo,'examples/selection.json')]);

@@ -6,6 +6,8 @@ export function reviewResearch(root) {
   write(root,'research/fixture-review.json',{summary:'Read all fictional fixture records; no unresolved source questions.'});
   c.sources=c.sources.map(s=>({...s,relevant:true,status:'reviewed',review:{artifact:'research/fixture-review.json',summary:'Fixture content reviewed'}}));
   write(root,'research/coverage.json',c);
+  c.externalDiscovery={...confirmation,choice:'declined',scopeFingerprint:researchGate(root).externalOpportunities.fingerprint};
+  write(root,'research/coverage.json',c);
   write(root,'research/synthesis.json',{summary:'Fictional family structure and available evidence.'});
   c.synthesis={artifact:'research/synthesis.json',inventoryFingerprint:researchGate(root).inventoryFingerprint};
   write(root,'research/coverage.json',c);

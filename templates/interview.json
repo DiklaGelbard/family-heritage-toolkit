@@ -1,10 +1,87 @@
 [
-  {"stage":"researchScope","phase":"research","questions":["Which branches, people and places should we research?","What would you like to learn or preserve, and which sources may we inspect?"],"guidance":"Set research boundaries. Narrative center, cover and layout remain provisional."},
-  {"stage":"sources","phase":"research","preparation":"Summarize known material and distinguish located, inspected, partially read and inaccessible sources.","questions":["Beyond the sources already identified, what else could help: photo albums, interviews, recordings, letters, certificates, roots projects, relevant emails, other trees or grave records?","Which specific locations may we inspect, and is there a relative who may have more material?","Who should receive credit, and which material is for research only?"],"completion":"Record actual answers and source status in research/coverage.json. Silence is not completion; filenames are not content reviews."},
-  {"stage":"coverage","phase":"research","questions":["These sources or questions remain unresolved. Can you provide access or clarification, or do you explicitly want to proceed with the listed gaps?"],"guidance":"Inspect accessible relevant sources first, summarize findings and gaps, and bind actual proceed approval to the current research fingerprint. Do not ask for a waiver as a shortcut around available research."},
-  {"stage":"storyFocus","phase":"planning","requires":"research.ready","questions":["Based on the reviewed evidence, should the site center on one person, a couple, a family, a place or a community?","What relationship or shared experience should connect the story?"],"guidance":"Do not inherit narrative focus from the tree root."},
-  {"stage":"audience","phase":"planning","requires":"research.ready","questions":["Who should see the site, and what may they see about living relatives?"]},
-  {"stage":"storyPlan","phase":"planning","requires":"research.ready","questions":["Does this evidence-backed story structure reflect what you want to tell?","Would a map, timeline, album or another format support that story?"],"guidance":"Present a concise proposal from the synthesis; do not invent journeys or encounters."},
-  {"stage":"design","phase":"planning","requires":"research.ready","questions":["Which language and visual style do you prefer?","Which recognized photo should be the cover, or should the first version have no cover?"]},
-  {"stage":"review","phase":"planning","requires":"research.ready","questions":["What is essential for this version, and is the deliverable a local preview or a published site?","Does the preview tell the intended story and include the agreed content?"],"guidance":"Run assess before concluding; ask the next unresolved question explicitly."}
+  {
+    "stage": "researchScope",
+    "phase": "research",
+    "questions": [
+      "Which branches, people and places should we research?",
+      "What would you like to learn or preserve, and which sources may we inspect?"
+    ],
+    "guidance": "Set research boundaries. Narrative center, cover and layout remain provisional."
+  },
+  {
+    "stage": "sources",
+    "phase": "research",
+    "preparation": "Summarize known material and distinguish located, inspected, partially read and inaccessible sources.",
+    "questions": [
+      "Beyond the sources already identified, what else could help: photo albums, interviews, recordings, letters, certificates, roots projects, relevant emails, other trees or grave records?",
+      "Which specific locations may we inspect, and is there a relative who may have more material?",
+      "Who should receive credit, and which material is for research only?"
+    ],
+    "completion": "Record actual answers and source status in research/coverage.json. Silence is not completion; filenames are not content reviews."
+  },
+  {
+    "stage": "externalDiscovery",
+    "phase": "research",
+    "after": "sources",
+    "questions": [
+      "After reviewing the tree, should we investigate missing dates, burial details or grave photographs through BillionGraves or cemetery records?",
+      "Do you know cemetery names, spelling variants, grave links or external family trees that could help?"
+    ],
+    "guidance": "Ask after initial scope and source inventory. Record requested, declined or deferred in coverage.externalDiscovery with the current opportunity fingerprint. Track requested searches and evidence; never assume permission or deceased status."
+  },
+  {
+    "stage": "coverage",
+    "phase": "research",
+    "questions": [
+      "These sources or questions remain unresolved. Can you provide access or clarification, or do you explicitly want to proceed with the listed gaps?"
+    ],
+    "guidance": "Inspect accessible relevant sources first, summarize findings and gaps, and bind actual proceed approval to the current research fingerprint. Do not ask for a waiver as a shortcut around available research."
+  },
+  {
+    "stage": "storyFocus",
+    "phase": "planning",
+    "requires": "research.ready",
+    "questions": [
+      "Based on the reviewed evidence, should the site center on one person, a couple, a family, a place or a community?",
+      "What relationship or shared experience should connect the story?"
+    ],
+    "guidance": "Do not inherit narrative focus from the tree root."
+  },
+  {
+    "stage": "audience",
+    "phase": "planning",
+    "requires": "research.ready",
+    "questions": [
+      "Who should see the site, and what may they see about living relatives?"
+    ]
+  },
+  {
+    "stage": "storyPlan",
+    "phase": "planning",
+    "requires": "research.ready",
+    "questions": [
+      "Does this evidence-backed story structure reflect what you want to tell?",
+      "Would a map, timeline, album or another format support that story?"
+    ],
+    "guidance": "Present a concise proposal from the synthesis; do not invent journeys or encounters."
+  },
+  {
+    "stage": "design",
+    "phase": "planning",
+    "requires": "research.ready",
+    "questions": [
+      "Which language and visual style do you prefer?",
+      "Which recognized photo should be the cover, or should the first version have no cover?"
+    ]
+  },
+  {
+    "stage": "review",
+    "phase": "planning",
+    "requires": "research.ready",
+    "questions": [
+      "What is essential for this version, and is the deliverable a local preview or a published site?",
+      "Does the preview tell the intended story and include the agreed content?"
+    ],
+    "guidance": "Run assess before concluding; ask the next unresolved question explicitly."
+  }
 ]

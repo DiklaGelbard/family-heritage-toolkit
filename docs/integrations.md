@@ -6,7 +6,7 @@
 | GEDCOM | Names, birth/death dates, families, MARR/DIV date/place text with warnings | Custom fields, Hebrew continuation bytes, pedigree qualifiers and calendars |
 | Website | Local RTL/LTR person and family sections | Cover, albums, audio and hosting adapters |
 | MyHeritage | Not implemented | Reviewed diffs and browser-assisted edits with destination verification |
-| BillionGraves | Not implemented | Source-linked research and identity review |
+| BillionGraves | Candidate detection, interview decision and search-report tracking; agent-guided research workflow | No live API/scraper adapter; use authorized web/browser tools |
 | Google Photos | Not implemented | Selected imports and source-link manifests; do not promise shared-album sync |
 | Hebrew audio | Not implemented | Preserve originals, timestamped raw and corrected transcripts |
 

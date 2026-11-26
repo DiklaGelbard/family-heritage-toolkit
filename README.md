@@ -44,6 +44,8 @@ Research is checked first through research/coverage.json. Filenames and links ar
 
 ## Implemented and planned
 
+External discovery now proposes grave-research opportunities from explicitly deceased accepted records and asks about BillionGraves/cemetery and other external sources. Decisions and requested search reports are tracked by the research gate. The agent conducts authorized searches with available tools; an automated scraper/API adapter is not implemented. See workflows/external-source-discovery.md.
+
 Implemented: guided discovery skill; fictional Hebrew example; JSON and limited GEDCOM intake; partners, family-specific children, marriage/divorce events with dates and places; preserved source copies; validation; reviewed snapshot acceptance; explicit publication selection; stale-selection checks; RTL/LTR HTML preview; persistent receipts and a single-writer lock.
 
 Planned: richer claim/conflict review, full GEDCOM fidelity and exports, media galleries and cover rendering, Hebrew transcription, exact photo edits, browser-assisted MyHeritage/BillionGraves/Google Photos workflows, hosting adapters. No automatic synchronization or external writes are provided today.

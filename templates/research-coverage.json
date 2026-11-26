@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "scope": null,
   "discovery": null,
+  "externalDiscovery": null,
   "sources": [],
   "synthesis": null,
   "proceedWithGaps": null

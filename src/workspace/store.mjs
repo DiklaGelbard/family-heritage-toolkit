@@ -20,7 +20,7 @@ export function init(root) {
   write(root, 'decisions.json', {schemaVersion:1, decisions:[]});
   write(root, 'research/questions.json', {schemaVersion:1, questions:[]});
   write(root, 'discovery.json', {schemaVersion:1, answers:{}, tasks:[], review:null});
-  write(root, 'research/coverage.json', {schemaVersion:1,scope:null,discovery:null,sources:[],synthesis:null,proceedWithGaps:null});
+  write(root, 'research/coverage.json', {schemaVersion:1,scope:null,discovery:null,externalDiscovery:null,sources:[],synthesis:null,proceedWithGaps:null});
   fs.copyFileSync(fileURLToPath(new URL('../../templates/brief.md',import.meta.url)),path.join(root,'brief.md'));
 }
 export function receipt(root, operation, inputHash, outputHash) {

@@ -12,6 +12,8 @@ Read documents and relevant email attachments, review photos, and transcribe/lis
 
 ## 3. Assess coverage
 
+Run external-source-discovery.md after initial source review. Ask explicitly about new research opportunities, including BillionGraves for missing dates/burials. Persist the decision in externalDiscovery; requested searches become tracked work. Pending decisions or unfinished requested searches hold the planning gate. Declined/deferred research does not trigger repetitive prompts unless candidate scope changes.
+
 Run `node src/cli/index.mjs assess DIR`. While stage is research, continue available review work or ask about access and missing sources. Planning questions are withheld. Relevant deferred/unavailable sources remain gaps; the agent cannot waive them. Excluding a source as irrelevant requires a recorded user confirmation in this initial implementation.
 
 Prepare research/synthesis.md (or JSON) with supported family stories, citations, disagreements, remaining gaps and evidence limitations. This is a research summary, not a website plan. Associate it with the current inventoryFingerprint returned in assessment.research. When the inventory or review artifacts change, update the synthesis and its fingerprint after reviewing the changes.

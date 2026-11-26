@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {read,hash} from './store.mjs';
+import {assessExternal} from './external-discovery.mjs';
 
 export const confirmed=x=>x?.status==='confirmed' && x.by==='user' && typeof x.answer==='string' && x.answer.trim() && typeof x.evidence==='string' && x.evidence.trim();
 function artifact(root,relative) {
@@ -19,6 +20,8 @@ export function researchGate(root) {
   const gaps=[],work=[],ids=new Set(),artifacts={};
   if(!confirmed(coverage.scope)) gaps.push({id:'researchScope',question:'Which family branches, people and places should the research cover? We will choose the website story after reviewing the sources.'});
   if(!confirmed(coverage.discovery)) gaps.push({id:'sourceDiscovery',question:'Beyond the sources already identified, what other albums, recordings, documents, relevant emails or family-tree websites are available? Nothing else for now is a valid answer.'});
+  const external=assessExternal(root,coverage,confirmed,artifact);
+  gaps.push(...external.gaps);work.push(...external.work);
   for(const s of coverage.sources) {
     if(typeof s.id!=='string'||!s.id||ids.has(s.id)||!['located','pending_access','reviewed','unavailable','deferred'].includes(s.status)) throw Error('Invalid/duplicate research source');
     ids.add(s.id);
@@ -36,16 +39,16 @@ export function researchGate(root) {
   if(!coverage.sources.length) gaps.push({id:'emptyInventory',question:'No research sources are inventoried. Identify available material or explicitly approve a source-free draft.'});
   const synthesisHash=artifact(root,coverage.synthesis?.artifact);
   // Synthesis must describe this inventory, not an earlier source set.
-  const inventoryFingerprint=hash({scope:coverage.scope,discovery:coverage.discovery,sources:coverage.sources,projectScope:project.scope,projectSources:project.sources||[],artifacts});
+  const inventoryFingerprint=hash({scope:coverage.scope,discovery:coverage.discovery,sources:coverage.sources,projectScope:project.scope,projectSources:project.sources||[],artifacts,externalDiscovery:coverage.externalDiscovery,externalFingerprint:external.opportunities.fingerprint,externalArtifacts:external.artifacts});
   if(!synthesisHash||coverage.synthesis?.inventoryFingerprint!==inventoryFingerprint) gaps.push({id:'synthesis',question:'Prepare a current research synthesis: supported stories, citations, contradictions, unread material and gaps. Do not plan the website yet.'});
   const fingerprint=hash({inventoryFingerprint,synthesis:coverage.synthesis,synthesisHash});
   const override=confirmed(coverage.proceedWithGaps)&&coverage.proceedWithGaps.fingerprint===fingerprint;
   const ready=!gaps.length||Boolean(override);
   const first=gaps[0];
-  const foundational=gaps.find(g=>['researchScope','sourceDiscovery'].includes(g.id));
+  const foundational=gaps.find(g=>['researchScope','sourceDiscovery','externalDiscovery'].includes(g.id));
   const action=ready?'planning_ready':foundational?'ask_user':work.length?'continue':gaps.every(g=>g.id==='synthesis')?'continue':'ask_user';
   const next=ready?'Research reviewed, or current gaps explicitly approved. Website planning may begin.':foundational?.question||work[0]?.description||first?.question;
-  return {ready,action,next,gaps,independentWork:work,inventoryFingerprint,fingerprint,approvedWithGaps:Boolean(override),limits:'Readiness reflects recorded reviews, not a guarantee that every possible external source has been found.'};
+  return {ready,action,next,gaps,independentWork:work,externalOpportunities:external.opportunities,inventoryFingerprint,fingerprint,approvedWithGaps:Boolean(override),limits:'Readiness reflects recorded reviews, not a guarantee that every possible external source has been found.'};
 }
 export function requireResearch(root) {
   const gate=researchGate(root);

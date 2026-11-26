@@ -10,6 +10,8 @@ Discovery skill: skills/discovery-interview/SKILL.md. Resume a workspace with no
 
 Every new project must include an additional-source discovery round, even if files were supplied in the handoff. Summarize known sources, ask what else is available, and persist the answer or pending question. Follow the discovery skill; do not assume the supplied inventory is exhaustive.
 
+Also follow workflows/external-source-discovery.md: proactively offer relevant external research, including BillionGraves for missing dates, burial locations and grave photographs. Track requested/declined/deferred decisions and search reports. A file inventory does not satisfy external-source discovery.
+
 Before ending a turn, follow workflows/continue-or-ask.md and run `node src/cli/index.mjs assess DIR`. Maintain discovery.json from actual user answers and task evidence. A built preview does not mean the website goal is complete. If an answer is required, ask a focused question in the user-visible response rather than only announcing that questions are pending. If independent authorized work remains, continue it. Never treat the tree's root person as a confirmed narrative focus.
 
 Research precedes website planning. Maintain research/coverage.json, inspect relevant source contents and prepare a synthesis before asking for narrative focus, cover, layout or visualization choices. Proceed with unread/unavailable material only after the user approves the specific recorded gaps. The CLI enforces this gate on select/build; do not bypass it with a custom renderer. Existing previews do not waive it. New sources require reassessment. Never reuse fictional demo confirmations for a real family.

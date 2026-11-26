@@ -17,8 +17,14 @@ export function parseGedcom(text, sourceId) {
     if(person) {
       if(n===1) event=null;
       if(tag==='NAME' && n===1 && !person.name) person.name=raw.replaceAll('/','').trim();
-      else if(n===1 && ['BIRT','DEAT'].includes(tag)) event=tag;
-      else if(tag==='DATE' && event && n===2) person.facts.push({id:`${person.id}-${event}-${person.facts.length}`,type:event==='BIRT'?'birth':'death',value:raw,citation:{sourceId,locator:`${person.id}/${event}/DATE`}});
+      else if(n===1 && ['BIRT','DEAT'].includes(tag)) {
+        event=tag;
+        if(tag==='DEAT') person.facts.push({id:`${person.id}-DEAT-${person.facts.length}`,type:'death',value:raw||'Y',citation:{sourceId,locator:`${person.id}/DEAT`}});
+      }
+      else if(tag==='DATE' && event && n===2) {
+        if(event==='DEAT') {const fact=person.facts.at(-1);fact.value=raw;fact.citation.locator=`${person.id}/DEAT/DATE`;}
+        else person.facts.push({id:`${person.id}-${event}-${person.facts.length}`,type:'birth',value:raw,citation:{sourceId,locator:`${person.id}/${event}/DATE`}});
+      }
       else warnings.push(`${person.id}: ${tag} retained in original only`);
     } else if(family) {
       if(n===1) event=null;
